@@ -1,6 +1,13 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+// import '../styles/globals.ts';
+import type { AppProps } from 'next/app';
+import { Global } from '@emotion/react';
+import { global } from '../styles/globals';
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <>
+      <Global styles={global} />
+      <Component {...pageProps} />
+    </>
+  );
 }
