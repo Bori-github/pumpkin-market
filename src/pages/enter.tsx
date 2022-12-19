@@ -4,6 +4,7 @@ import TwitterIcon from '../assets/twitter.svg';
 import GithubIcon from '../assets/github.svg';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import { Input } from '../components/Input';
 
 const Enter: NextPage = () => {
   const [method, setMethod] = useState<'email' | 'phone'>('email');
@@ -28,14 +29,11 @@ const Enter: NextPage = () => {
         </PhoneTabButton>
       </MethodTab>
       <Form>
-        <Label htmlFor={method === 'email' ? 'email' : 'phone'}>
-          {method === 'email' ? 'Email address' : 'Phone number'}
-        </Label>
         {method === 'email' && (
-          <Input type="email" required placeholder="Email address" />
+          <Input name="email" label="Email address" required />
         )}
         {method === 'phone' && (
-          <Input type="number" required placeholder="Phone number" />
+          <Input name="phone" label="Phone number" required />
         )}
         <SubmitButton type="submit">
           {method === 'email' ? 'Get login link' : 'Get one-time password'}
@@ -103,20 +101,6 @@ const Form = styled.form`
   flex-direction: column;
   row-gap: 10px;
   padding: 20px 0;
-`;
-
-const Label = styled.label`
-  font-size: 20px;
-  font-weight: bold;
-`;
-
-const Input = styled.input`
-  height: 40px;
-  padding: 0 10px;
-  border: 2px solid #000;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
 `;
 
 const SubmitButton = styled.button`
