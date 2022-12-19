@@ -5,6 +5,7 @@ import GithubIcon from '../assets/github.svg';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { Input } from '../components/Input';
+import { FormButtom } from '../components/FormButton';
 
 const Enter: NextPage = () => {
   const [method, setMethod] = useState<'email' | 'phone'>('email');
@@ -35,9 +36,10 @@ const Enter: NextPage = () => {
         {method === 'phone' && (
           <Input name="phone" label="Phone number" required />
         )}
-        <SubmitButton type="submit">
-          {method === 'email' ? 'Get login link' : 'Get one-time password'}
-        </SubmitButton>
+        <FormButtom
+          type="submit"
+          text={method === 'email' ? 'Get login link' : 'Get one-time password'}
+        />
       </Form>
       <OtherMethodContainer>
         <OtherMethodText>Or enter with</OtherMethodText>
@@ -101,17 +103,6 @@ const Form = styled.form`
   flex-direction: column;
   row-gap: 10px;
   padding: 20px 0;
-`;
-
-const SubmitButton = styled.button`
-  height: 40px;
-  border: 2px solid #000;
-  border-bottom-width: 4px;
-  border-radius: 8px;
-  background-color: #1747e7;
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
 `;
 
 const OtherMethodContainer = styled.div`
