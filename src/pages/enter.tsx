@@ -6,9 +6,30 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { Input } from '../components/Input';
 import { FormButtom } from '../components/FormButton';
+import { useForm } from 'react-hook-form';
+
+interface EnterFromProps {
+  email?: string;
+  phone?: number;
+}
 
 const Enter: NextPage = () => {
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EnterFromProps>();
   const [method, setMethod] = useState<'email' | 'phone'>('email');
+
+  const handleMethod = (method: 'email' | 'phone') => {
+    reset();
+    setMethod(method);
+  };
+
+  const onSubmit = (data: EnterFromProps) => {
+    console.log(data);
+  };
 
   return (
     <Section>
@@ -16,25 +37,39 @@ const Enter: NextPage = () => {
       <MethodTab>
         <EmailTabButton
           type="button"
-          onClick={() => setMethod('email')}
+          onClick={() => handleMethod('email')}
           method={method}
         >
           Email
         </EmailTabButton>
         <PhoneTabButton
           type="button"
-          onClick={() => setMethod('phone')}
+          onClick={() => handleMethod('phone')}
           method={method}
         >
           Phone
         </PhoneTabButton>
       </MethodTab>
-      <Form>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         {method === 'email' && (
-          <Input name="email" label="Email address" required />
+          <Input
+            register={register('email', {
+              required: '* Email address is required.',
+            })}
+            name="email"
+            label="Email address"
+            errors={errors.email}
+          />
         )}
         {method === 'phone' && (
-          <Input name="phone" label="Phone number" required />
+          <Input
+            register={register('phone', {
+              required: '* Phone number is required.',
+            })}
+            name="phone"
+            label="Phone number"
+            errors={errors.phone}
+          />
         )}
         <FormButtom
           type="submit"

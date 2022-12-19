@@ -1,20 +1,28 @@
 import styled from '@emotion/styled';
+import type { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 
 interface InputProps {
   name: string;
   label: string;
-  [key: string]: string | boolean;
+  register: UseFormRegisterReturn;
+  errors?: FieldError;
 }
 
-export const Input = ({ name, label, ...rest }: InputProps) => {
+export const Input = ({ name, label, register, errors }: InputProps) => {
   return (
     <>
       <Label htmlFor={name}>{label}</Label>
       {name === 'email' && (
-        <InputField type="email" placeholder={label} {...rest} />
+        <div>
+          <InputField type="email" placeholder={label} {...register} />
+          <ErrorText>{errors?.message}</ErrorText>
+        </div>
       )}
       {name === 'phone' && (
-        <InputField type="number" placeholder={label} {...rest} />
+        <div>
+          <InputField type="number" placeholder={label} {...register} />
+          <ErrorText>{errors?.message}</ErrorText>
+        </div>
       )}
     </>
   );
@@ -43,4 +51,12 @@ const InputField = styled.input`
   &[type='number'] {
     -moz-appearance: textfield;
   }
+`;
+
+const ErrorText = styled.span`
+  display: inline-block;
+  margin: 6px 0 0 6px;
+  color: #f85a2b;
+  font-size: 13px;
+  font-weight: bold;
 `;
