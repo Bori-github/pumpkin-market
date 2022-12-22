@@ -27,5 +27,8 @@
     "@emotion/babel-plugin": "^11.10.5",
     "@svgr/webpack": "^6.5.1",
     "prisma": "^4.7.1"
+  },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
   }
 }
