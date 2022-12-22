@@ -1,12 +1,13 @@
 import type { NextPage } from 'next';
 import { useState } from 'react';
-import TwitterIcon from '../assets/twitter.svg';
-import GithubIcon from '../assets/github.svg';
+import TwitterIcon from 'assets/twitter.svg';
+import GithubIcon from 'assets/github.svg';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { Input } from '../components/Input';
-import { FormButtom } from '../components/FormButton';
+import { Input } from 'components/Input';
+import { FormButtom } from 'components/FormButton';
 import { useForm } from 'react-hook-form';
+import useMutation from 'libs/client/useMutation';
 
 interface EnterFromProps {
   email?: string;
@@ -14,6 +15,7 @@ interface EnterFromProps {
 }
 
 const Enter: NextPage = () => {
+  const [enter, { loading, data, error }] = useMutation('/api/users/enter');
   const {
     register,
     reset,
@@ -27,8 +29,9 @@ const Enter: NextPage = () => {
     setMethod(method);
   };
 
-  const onSubmit = (data: EnterFromProps) => {
-    console.log(data);
+  const onSubmit = (validData: EnterFromProps) => {
+    if (loading) return;
+    enter(validData);
   };
 
   return (
@@ -73,7 +76,13 @@ const Enter: NextPage = () => {
         )}
         <FormButtom
           type="submit"
-          text={method === 'email' ? 'Get login link' : 'Get one-time password'}
+          text={
+            loading
+              ? 'Loading'
+              : method === 'email'
+              ? 'Get login link'
+              : 'Get one-time password'
+          }
         />
       </Form>
       <OtherMethodContainer>
