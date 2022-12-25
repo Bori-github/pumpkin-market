@@ -14,8 +14,22 @@ interface EnterFromProps {
   phone?: number;
 }
 
+interface TokenFormProps {
+  token: string;
+}
+
+interface MutationResult {
+  ok: boolean;
+}
+
 const Enter: NextPage = () => {
-  const [enter, { loading, data, error }] = useMutation('/api/users/enter');
+  const [enter, { loading, data, error }] =
+    useMutation<MutationResult>('/api/users/enter');
+  const [
+    confirmToken,
+    { loading: tokenLoading, data: tokenData, error: tokenError },
+  ] = useMutation<MutationResult>('/api/users/confirm');
+
   const {
     register,
     reset,
@@ -23,6 +37,8 @@ const Enter: NextPage = () => {
     formState: { errors },
   } = useForm<EnterFromProps>();
   const [method, setMethod] = useState<'email' | 'phone'>('email');
+  const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
+    useForm<TokenFormProps>();
 
   const handleMethod = (method: 'email' | 'phone') => {
     reset();
@@ -32,6 +48,11 @@ const Enter: NextPage = () => {
   const onSubmit = (validData: EnterFromProps) => {
     if (loading) return;
     enter(validData);
+  };
+
+  const onTokenSubmit = (validData: TokenFormProps) => {
+    if (tokenLoading) return;
+    confirmToken(validData);
   };
 
   return (
@@ -61,6 +82,7 @@ const Enter: NextPage = () => {
             })}
             name="email"
             label="Email address"
+            type="email"
             errors={errors.email}
           />
         )}
@@ -71,6 +93,7 @@ const Enter: NextPage = () => {
             })}
             name="phone"
             label="Phone number"
+            type="text"
             errors={errors.phone}
           />
         )}
@@ -85,6 +108,22 @@ const Enter: NextPage = () => {
           }
         />
       </Form>
+      {data?.ok && (
+        <Form onSubmit={tokenHandleSubmit(onTokenSubmit)}>
+          <Input
+            register={tokenRegister('token', {
+              required: '* Token is required.',
+            })}
+            name="token"
+            label="Confirmation Token"
+            type="number"
+          />
+          <FormButtom
+            type="submit"
+            text={tokenLoading ? 'Loading' : 'Confirm Token'}
+          />
+        </Form>
+      )}
       <OtherMethodContainer>
         <OtherMethodText>Or enter with</OtherMethodText>
       </OtherMethodContainer>
