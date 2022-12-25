@@ -4,26 +4,19 @@ import type { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 interface InputProps {
   name: string;
   label: string;
+  type: string;
   register: UseFormRegisterReturn;
   errors?: FieldError;
 }
 
-export const Input = ({ name, label, register, errors }: InputProps) => {
+export const Input = ({ name, label, type, register, errors }: InputProps) => {
   return (
     <>
       <Label htmlFor={name}>{label}</Label>
-      {name === 'email' && (
-        <div>
-          <InputField type="email" placeholder={label} {...register} />
-          <ErrorText>{errors?.message}</ErrorText>
-        </div>
-      )}
-      {name === 'phone' && (
-        <div>
-          <InputField type="number" placeholder={label} {...register} />
-          <ErrorText>{errors?.message}</ErrorText>
-        </div>
-      )}
+      <div>
+        <InputField type={type} placeholder={label} {...register} />
+        <ErrorText>{errors?.message}</ErrorText>
+      </div>
     </>
   );
 };
