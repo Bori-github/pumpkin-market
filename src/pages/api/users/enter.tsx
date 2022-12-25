@@ -12,7 +12,7 @@ const handler = async (
 ) => {
   const { email, phone } = req.body;
   const payload = Math.floor(100000 + Math.random() * 900000) + '';
-  const user = email ? { email } : phone ? { phone: +phone } : null;
+  const user = email ? { email } : phone ? { phone: phone } : null;
 
   if (!user) return res.status(400).json({ ok: false });
 
@@ -34,13 +34,11 @@ const handler = async (
   });
 
   if (phone) {
-    const message = await twilioClient.messages.create({
+    await twilioClient.messages.create({
       messagingServiceSid: process.env.TWILIO_MSID,
       to: process.env.TWILIO_PHONENUMBER!,
       body: `로그인 토큰은 ${payload} 입니다.`,
     });
-
-    console.log(message);
   }
 
   if (email) {
