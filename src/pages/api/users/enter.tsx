@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import withHandler, { ResponseType } from 'libs/server/withHandler';
 import client from 'libs/server/client';
 import twilio from 'twilio';
+import { smtpTransport } from 'libs/server/email';
 
 const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 
@@ -40,6 +41,25 @@ const handler = async (
     });
 
     console.log(message);
+  }
+
+  if (email) {
+    const mailOptions = {
+      from: process.env.NODE_MAILER_ID,
+      to: email,
+      subject: 'Pumpkin Market 인증 메일',
+      html: `<strong>인증번호는 ${payload} 입니다.</strong>`,
+      text: 'Pumpkin Market 인증 메일',
+    };
+
+    await smtpTransport.sendMail(mailOptions, (error, responses) => {
+      if (error) {
+        res.status(400).json({ ok: false });
+      } else {
+        res.status(200).json({ ok: true });
+      }
+      smtpTransport.close();
+    });
   }
 
   return res.status(200).json({ ok: true });
