@@ -16,7 +16,7 @@ const handler = async (
 
   if (!user) return res.status(400).json({ ok: false });
 
-  const token = await client.token.create({
+  await client.token.create({
     data: {
       payload,
       user: {
