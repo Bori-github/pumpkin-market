@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TwitterIcon from 'assets/twitter.svg';
 import GithubIcon from 'assets/github.svg';
 import styled from '@emotion/styled';
@@ -8,6 +8,7 @@ import { Input } from 'components/Input';
 import { FormButtom } from 'components/FormButton';
 import { useForm } from 'react-hook-form';
 import useMutation from 'libs/client/useMutation';
+import { useRouter } from 'next/router';
 
 interface EnterFromProps {
   email?: string;
@@ -23,6 +24,7 @@ interface MutationResult {
 }
 
 const Enter: NextPage = () => {
+  const router = useRouter();
   const [enter, { loading, data, error }] =
     useMutation<MutationResult>('/api/users/enter');
   const [
@@ -54,6 +56,12 @@ const Enter: NextPage = () => {
     if (tokenLoading) return;
     confirmToken(validData);
   };
+
+  useEffect(() => {
+    if (tokenData?.ok) {
+      router.push('/');
+    }
+  }, [router, tokenData]);
 
   return (
     <Section>
@@ -108,22 +116,22 @@ const Enter: NextPage = () => {
           }
         />
       </Form>
-      {data?.ok && (
-        <Form onSubmit={tokenHandleSubmit(onTokenSubmit)}>
-          <Input
-            register={tokenRegister('token', {
-              required: '* Token is required.',
-            })}
-            name="token"
-            label="Confirmation Token"
-            type="number"
-          />
-          <FormButtom
-            type="submit"
-            text={tokenLoading ? 'Loading' : 'Confirm Token'}
-          />
-        </Form>
-      )}
+      {/* {data?.ok && ( */}
+      <Form onSubmit={tokenHandleSubmit(onTokenSubmit)}>
+        <Input
+          register={tokenRegister('token', {
+            required: '* Token is required.',
+          })}
+          name="token"
+          label="Confirmation Token"
+          type="number"
+        />
+        <FormButtom
+          type="submit"
+          text={tokenLoading ? 'Loading' : 'Confirm Token'}
+        />
+      </Form>
+      {/* )} */}
       <OtherMethodContainer>
         <OtherMethodText>Or enter with</OtherMethodText>
       </OtherMethodContainer>
