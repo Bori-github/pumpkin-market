@@ -25,9 +25,10 @@ const useMutation = <T extends any>(url: string): UseMutationResult<T> => {
       body: JSON.stringify(data),
     })
       .then((response) => response.json().catch(() => {}))
-      .then((data) => setState((prev) => ({ ...prev, data })))
-      .catch((error) => setState((prev) => ({ ...prev, error })))
-      .finally(() => setState((prev) => ({ ...prev, loading: false })));
+      .then((data) => setState((prev) => ({ ...prev, data, loading: false })))
+      .catch((error) =>
+        setState((prev) => ({ ...prev, error, loading: false }))
+      );
   };
 
   return [mutation, { ...state }];
