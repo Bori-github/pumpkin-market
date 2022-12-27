@@ -10,12 +10,12 @@ import { useForm } from 'react-hook-form';
 import useMutation from 'libs/client/useMutation';
 import { useRouter } from 'next/router';
 
-interface EnterFromProps {
+interface SignInProps {
   email?: string;
   phone?: number;
 }
 
-interface TokenFormProps {
+interface TokenProps {
   token: string;
 }
 
@@ -23,10 +23,10 @@ interface MutationResult {
   ok: boolean;
 }
 
-const Enter: NextPage = () => {
+const SignIn: NextPage = () => {
   const router = useRouter();
-  const [enter, { loading, data, error }] =
-    useMutation<MutationResult>('/api/users/enter');
+  const [signIn, { loading, data, error }] =
+    useMutation<MutationResult>('/api/users/signIn');
   const [
     confirmToken,
     { loading: tokenLoading, data: tokenData, error: tokenError },
@@ -37,22 +37,22 @@ const Enter: NextPage = () => {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<EnterFromProps>();
+  } = useForm<SignInProps>();
   const [method, setMethod] = useState<'email' | 'phone'>('email');
   const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
-    useForm<TokenFormProps>();
+    useForm<TokenProps>();
 
   const handleMethod = (method: 'email' | 'phone') => {
     reset();
     setMethod(method);
   };
 
-  const onSubmit = (validData: EnterFromProps) => {
+  const onSubmit = (validData: SignInProps) => {
     if (loading) return;
-    enter(validData);
+    signIn(validData);
   };
 
-  const onTokenSubmit = (validData: TokenFormProps) => {
+  const onTokenSubmit = (validData: TokenProps) => {
     if (tokenLoading) return;
     confirmToken(validData);
   };
@@ -65,7 +65,7 @@ const Enter: NextPage = () => {
 
   return (
     <Section>
-      <Title>Enter to Pumpkin</Title>
+      <Title>Sign in to Pumpkin</Title>
       <MethodTab>
         <EmailTabButton
           type="button"
@@ -116,22 +116,22 @@ const Enter: NextPage = () => {
           }
         />
       </Form>
-      {/* {data?.ok && ( */}
-      <Form onSubmit={tokenHandleSubmit(onTokenSubmit)}>
-        <Input
-          register={tokenRegister('token', {
-            required: '* Token is required.',
-          })}
-          name="token"
-          label="Confirmation Token"
-          type="number"
-        />
-        <FormButtom
-          type="submit"
-          text={tokenLoading ? 'Loading' : 'Confirm Token'}
-        />
-      </Form>
-      {/* )} */}
+      {data?.ok && (
+        <Form onSubmit={tokenHandleSubmit(onTokenSubmit)}>
+          <Input
+            register={tokenRegister('token', {
+              required: '* Token is required.',
+            })}
+            name="token"
+            label="Confirmation Token"
+            type="number"
+          />
+          <FormButtom
+            type="submit"
+            text={tokenLoading ? 'Loading' : 'Confirm Token'}
+          />
+        </Form>
+      )}
       <OtherMethodContainer>
         <OtherMethodText>Or enter with</OtherMethodText>
       </OtherMethodContainer>
@@ -147,7 +147,7 @@ const Enter: NextPage = () => {
   );
 };
 
-export default Enter;
+export default SignIn;
 
 const Section = styled.section`
   width: 80%;
