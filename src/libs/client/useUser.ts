@@ -2,10 +2,8 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 
-const fetcher = (url: string) => fetch(url).then((response) => response.json());
-
 const useUser = () => {
-  const { data, error, isValidating } = useSWR('/api/users/me', fetcher);
+  const { data, error, isValidating } = useSWR('/api/users/me');
   const router = useRouter();
 
   useEffect(() => {
